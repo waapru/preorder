@@ -1,0 +1,81 @@
+{if $settings.on}
+<div class="shop-preorder-plugin-form-wr" id="shop-preorder-plugin-form-wr-{$data.product_id}">
+	{foreach $data.skus as $sku_id=>$sku}
+		<a class="preorder-open" href="#" data-sku-id="{$sku_id}" id="shop-preorder-plugin-form-{$sku_id}-btn"{if $product.sku_id != $sku_id} style="display:none"{/if}>{$settings.button}</a>
+	{/foreach}
+	<script type="text/javascript">
+	$(function(){
+		$.shopPreorderPlugin.product_ids = {json_encode($data.product_ids)}
+	})
+	</script>
+	{foreach $data.skus as $sku_id=>$sku}
+	<div id="shop-preorder-plugin-form-{$sku_id}" class="box-modal_1" style="display:none;">
+		
+		<h3>Заказать {$data.product_name}{if !empty($sku.name)} ({$sku.name}){else} ({$sku.sku}){/if}</h3>
+		<input type="hidden" name="preorder_product_id" value="{$data.product_id}">
+		<div class="options">
+			<div class="inline-select">
+				{foreach $data.skus as $id=>$s}
+				<a data-sku-id="{$id}" href="#" class="not-color-block{if $id == $sku_id} selected{/if}">{$s.name}</a>
+				{/foreach}
+				<input type="hidden" name="preorder_sku_id" value="{$id}">
+			</div>
+		</div>
+		{$wa->csrf()}
+		
+		<div class="field">
+			<div class="name">Количество товара:</div>
+			<div class="value">
+				<input type="text" name="preorder_quantity" value="1">
+			</div>
+		</div>
+		
+		{if $data.is_auth == 0}
+		
+		{if $settings.name}
+		<div class="field">
+			<div class="name">Ваше имя:</div>
+			<div class="value">
+				<input type="text" name="preorder_name" value="{$data.user_name}">
+			</div>
+		</div>
+		{/if}
+		
+		{if $settings.type == 0 || $settings.type == 2}
+		<div class="field">
+			<div class="name">Email<span>*</span>:</div>
+			<div class="value">
+				<input type="text" name="preorder_email" value="">
+			</div>
+		</div>
+		{/if}
+		
+		{/if}
+		
+		{if $settings.type == 1 || $settings.type == 2}
+		<div class="field">
+			<div class="name">Телефон<span>*</span>:</div>
+			<div class="value">
+				<input type="text" name="preorder_phone" value="">
+			</div>
+		</div>
+		{/if}
+		
+		<div class="field">
+			<div class="name">Комментарий:</div>
+			<div class="value">
+				<textarea name="preorder_comment"></textarea>
+			</div>
+		</div>
+		
+		
+		<div class="field">
+			<div class="value">
+				<a class="preorder-submit" href="{$data.url}preorder/">Заказать</a>
+			</div>
+		</div>
+	</div>
+	{/foreach}
+</div>
+
+{/if}

@@ -1,0 +1,49 @@
+.preorder-open,
+.preorder-submit {
+display: inline-block;
+background: green;
+color: #fff;
+padding: 7px 10px;
+text-decoration: none;
+margin: 5px 0;
+}
+
+.preorder-open:hover,
+.preorder-submit:hover {
+color: #fff!important;
+background: #13B513;
+}
+
+.box-modal .field {
+min-height: 30px;
+}
+
+.box-modal .field .name {
+float: left;
+}
+
+.box-modal .field .value {
+margin-left: 160px;
+}
+
+.box-modal .field .name span {
+color: red;
+}
+
+p.error {
+margin:0;
+}
+
+a.preorder-submit.disabled,
+a.preorder-submit.disabled:hover {
+background: silver;
+}
+
+.box-modal [name="preorder_comment"] {
+width: 300px;
+height: 100px;
+}
+
+.box-modal .field {
+margin-bottom:5px;
+}

@@ -1,0 +1,49 @@
+<div class="content right200px">
+	<div class="block double-padded">
+		<h1>Предзаказанные товары</h1>
+		{if $list}
+		<table class="zebra" id="shop-fav-plugin-table">
+			<thead>
+				<tr>
+					<th>
+						<a href="#" class="inline-link">Название</a>
+					</th>
+					<th>
+						<a href="#" class="inline-link">Артикул</a>
+					</th>
+					<th class="short align-right">
+						<a href="#" class="inline-link">Количество</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $list as $sku_id=>$p}
+				<tr>
+					<td>
+						<a href="?action=products#/product/{$p.product_id}/edit/">{$p.name}</a>
+					</td>
+					<td>
+						{$p.sku_code|default:"#`$sku_id`"}
+					</td>
+					<td class="short nowrap align-right">{$p.count}</td>
+				</tr>
+				{/foreach}
+			</tbody>
+		</table>
+		<p>{$current} товара(ов) из {$count}{if $current < $count}<br><a href="#" class="inline-link" id="s-fav-load-list" data-count="{$count}" data-offset="{$offset}">показать еще...</a>{/if}</p>
+		{else}
+		<p>Список пуст</p>
+		{/if}
+	</div>
+</div>
+
+<style>
+#shop-fav-plugin-table thead a {
+padding: 2px;
+}
+#shop-fav-plugin-table + p {
+text-align: center;
+padding: 10px;
+}
+</style>
+
