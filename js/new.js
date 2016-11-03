@@ -1,5 +1,9 @@
+/**
+ * @author Alexander Belov <waapru@gmail.com>
+ */
+
 (function($){
-// http://lapkikms.ru/dlya-koshek/sukhoy-korm/
+
 $.shopPreorderPlugin = {
 	settings: {},
 	product_ids:{},

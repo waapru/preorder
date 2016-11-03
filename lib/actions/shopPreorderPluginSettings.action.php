@@ -6,22 +6,26 @@ class shopPreorderPluginSettingsAction extends waViewAction
 	public function execute()
 	{
 		$plugin_id = 'preorder';
-		$path = 'plugins/'.$plugin_id.'/';
+		$plugin = wa()->getPlugin($plugin_id);
 		
-		$response = $this->getResponse();
-		$response->addJs($path.'js/jquery.waapplugindisign.js','shop');
-		$response->addCss($path.'css/jquery.waapplugindisign.css','shop');
-		$response->addJs($path.'js/jquery.waapplugindesc.js','shop');
-		$response->addCss($path.'css/jquery.waapplugindesc.css','shop');
-		$this->view->assign('js',$response->getJs(true,true));
-		$this->view->assign('css',$response->getCss(true,true));
+		$settings = array();
+		foreach ( array('standart') as $t )
+		{
+			$controls = array(
+				'subject' => $t,
+				'namespace' => 'shop_'.$plugin_id,
+				'title_wrapper' => '%s',
+				'description_wrapper' => '<br><span class="hint">%s</span>',
+				'control_wrapper'     => '<div class="field"><div class="name">%s</div><div class="value">%s%s</div></div>',
+			);
+			$settings[$t] = implode('',$plugin->getControls($controls));
+		}
 		
 		$f = new shopPreorderPluginFiles;
-		$this->view->assign('themes',$f->getThemes());
+		$themes = $f->getThemes();
 		
-		$plugin = wa()->getPlugin($plugin_id);
-		$this->view->assign('settings',$plugin->getSettings());
-		$this->view->assign('settingsHTML',$plugin->getSettingsHTML());
+		$v = $plugin->getVersion();
+		$this->view->assign(compact('settings','v'));
 	}
 
 }

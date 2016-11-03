@@ -1,6 +1,14 @@
-{$js}{$css}
-<h1>Настройка плагина</h1>
-<div class="preorder-plugin-settins">
+<script src="{$wa_url}wa-content/js/jquery-plugins/ibutton/jquery.ibutton.min.js"></script>
+<link rel="stylesheet" href="{$wa_url}wa-content/js/jquery-plugins/ibutton/jquery.ibutton.min.css" type="text/css"/>
+
+<script src="{$wa_url}wa-apps/shop/plugins/preorder/js/plugin.js?{$v}"></script>
+<link rel="stylesheet" href="{$wa_url}wa-apps/shop/plugins/preorder/css/plugin.css?{$v}">
+
+<h1>
+	Настройка плагина
+	<a href="mailto:waapru@gmail.com" title="waapru@gmail.com"><i class="icon16 status-green"></i>Поддержка</a>
+</h1>
+
 <div id="desc-block">
 	<p>Плагин "Предзаказ" позволяет посетителям интернет магазина сделать предварительный заказ товара, количество которого равно нулю.</p>
 	<p>Плагин формирует формы предварительного заказа для каждого артикула заказа, остаток для которого равен нулю. Кнопка предварительного заказа может выводяться через хук frontend_product.cart, обычно расположенного на странице товара рядом с кнопкой "В корзину", либо через хелпер плагина <b>{literal}{shopPreorderPlugin::form($product)}{/literal}</b>. Форма предварительного заказа для текущего артикула товара выводится в модальном окне.</p>
@@ -36,7 +44,7 @@
 	<p>По любым вопросам настройки и использования плагина обращайтесь в техподдержку плагина.</p>
 </div>
 
-<div class="block block-frontend-disign">
+<div class="block block-frontend-design">
 	<h4>
 		<i class="icon16 palette"></i>Дизайн плагина на витрине для темы 
 		<select name="theme" id="select-frontend-disign-theme">
@@ -44,6 +52,7 @@
 			{foreach $themes as $theme}
 			<option value="{$theme}">{$theme}</option>
 			{/foreach}
+			<option value="_default_">- исходный файл -</option>
 		</select>
 	</h4>
 	<a href="#" class="inline-link" data-mode="text/css" data-name="css">css-стили</a>
@@ -59,26 +68,22 @@
 	</div>
 </div>
 
-
-<div class="fields form">
-	<form action="?module=plugins&id=preorder&action=save" method="post" id="plugins-settings-form">
+<form action="?module=plugins&id=preorder&action=save" method="post" id="plugins-settings-form">
 	{$wa->csrf()}
-	{$settingsHTML}
-	<div class="field">
-		<div class="value submit">
-			<input type="submit" class="button green" value="Сохранить">
-			<span id="plugins-settings-form-status" style="display:none">
-				<i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
-			</span>
-		</div>
+	<div class="field-group">
+		{$settings.standart}
 	</div>
-	</form>
-</div>
-</div>
+	
+	<hr>
+		<input type="submit" class="button green" value="Сохранить" id="plugin-submit-btn" data-plugin-id="preorder">
+		<span id="plugins-settings-form-status" style="display:none">
+			<i style="vertical-align:middle" class="icon16 yes"></i> [`Saved`]
+		</span>
+</form>
 
 <script type="text/javascript">
 $(function(){
-	$('#desc-block').waapplugindesc();
-	$('.block-frontend-disign').waapplugindisign({ plugin_id:'preorder' });
+	var wa_url = '{$wa_url}';
+	$.shop.preorderPlugin.init();
 })
 </script>
