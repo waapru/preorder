@@ -7,21 +7,8 @@ class shopPreorderPluginOrderModel extends waModel
 	public function getList($offset = 0)
 	{
 		$list = array();
-		$q = "
-			SELECT
-			  i.sku_id,
-			  i.sku_code,
-			  i.product_id,
-			  COUNT(i.sku_id) AS count
-			FROM shop_order_items i
-			  INNER JOIN shop_order o
-				ON i.order_id = o.id
-			WHERE o.state_id LIKE 'preorder'
-			GROUP BY i.sku_id
-			ORDER BY count DESC
-			LIMIT $offset, ".self::PRODUCTS_PER_LOAD;
-		
-		if ( $r = $this->query($q)->fetchAll() )
+		$q = $this->listSql(array('i.sku_id','i.sku_code','i.product_id','COUNT(i.sku_id) AS count'));
+		if ( $r = $this->query($q,compact('offset'))->fetchAll() )
 		{
 			$product_ids = array();
 			foreach ( $r as $v )
@@ -46,20 +33,25 @@ class shopPreorderPluginOrderModel extends waModel
 	}
 	
 	
-	public function getCount()
+	protected function listSql($fields)
 	{
+		$fields = is_array($fields) ? $fields : array($fields);
 		$q = "
 			SELECT
-			  COUNT(SubQuery.count) AS count
-			FROM (SELECT
-				COUNT(i.sku_id) AS count,
-				i.sku_id
-			  FROM shop_order_items i
-				INNER JOIN shop_order o
-				  ON i.order_id = o.id
-			  WHERE o.state_id LIKE 'preorder'
-			  GROUP BY i.sku_id) SubQuery
-		";
+			  ".implode(',',$fields)."
+			FROM shop_order_items i
+			  INNER JOIN shop_order o
+				ON i.order_id = o.id
+			WHERE o.state_id LIKE 'preorder'
+			GROUP BY i.sku_id
+			ORDER BY count DESC
+			LIMIT i:offset, ".self::PRODUCTS_PER_LOAD;
+	}
+	
+	
+	public function getCount()
+	{
+		$q = '';
 		return $this->query($q)->fetchField('count');
 	}
 }
