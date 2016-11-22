@@ -5,16 +5,18 @@
 (function($){
 
 	$.shop.preorderPlugin = {
-		options: [],
+		wa_url: '',
 		plugin_id: 'preorder',
 		design_data: '',
 		progress_count: 0,
-		init: function(options){
+		init: function(wa_url){
 			var self = this,
 				form = $('#plugins-settings-form');
-			
+			this.wa_url = wa_url;
 			/* custom init */
-			
+			this.colorBtn();
+			$('#wahtmlcontrol_shop_preorder_btncolor,#wahtmlcontrol_shop_preorder_button').change(this.colorBtn);
+
 			/* general init */
 			$('[type="checkbox"]').iButton({
 				labelOn: 'вкл',
@@ -45,6 +47,15 @@
 		},
 		
 		/* custom methods */
+		colorBtn: function(){
+			var select = $('#wahtmlcontrol_shop_preorder_btncolor'),
+				label = $('#wahtmlcontrol_shop_preorder_button');
+			select.next('button').remove();
+			select.after($('<button class="preorder-btn preorder-btn-'+select.val()+'">'+label.val()+'</button>'));
+			select.next('button').click(function(){
+				return false;
+			})
+		},
 		
 		/* general methods */
 		initDescription: function(){
@@ -93,14 +104,14 @@
 							$('#dialog-plugin-design .dialog-content-indent').append('<div id="plugin-block-editor"></div>');
 							
 							var editor = ace.edit('plugin-block-editor');
-							ace.config.set("basePath", wa_url + 'wa-content/js/ace/');
-							editor.setTheme("ace/theme/eclipse");
+							ace.config.set("basePath", self.wa_url + 'wa-content/js/ace/');
+							editor.setTheme("ace/theme/textmate");
 							var session = editor.getSession();
 							session.setMode("ace/mode/"+mode);
 							session.setUseWrapMode(true);
 							editor.setOption("maxLines", 10000);
 							editor.setAutoScrollEditorIntoView(true);
-							editor.renderer.setShowGutter(false);
+							editor.renderer.setShowGutter(true);
 							editor.setShowPrintMargin(false);
 							
 							if (navigator.appVersion.indexOf('Mac') != -1)

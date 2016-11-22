@@ -103,6 +103,7 @@ class shopPreorderPluginFiles
 			$response->addCss($this->_general_data_url.$path);
 		else
 			$response->addCss($this->_app_url.$path,'shop');
+		return $this;
 	}
 	
 	public function addJs($name)
@@ -118,5 +119,6 @@ class shopPreorderPluginFiles
 			$response->addJs($this->_general_data_url.$path);
 		else
 			$response->addJs($this->_app_url.$path,'shop');
+		return $this;
 	}
 }

@@ -1,3 +1,10 @@
+.dialog-window {
+left: 2%!important;
+top: 2%!important;
+width: 96%!important;
+height: 82%!important;
+}
+
 h1 a {
 font-size: 14px;
 float: right;
@@ -85,4 +92,83 @@ margin-top: 5px;
 .desc-block {
 padding:10px;
 background:whitesmoke;
+}
+
+.preorder-btn {
+display: inline-block;
+margin-bottom: 0;
+font-weight: 400;
+text-align: center;
+vertical-align: middle;
+cursor: pointer;
+background-image: none;
+border: 1px solid transparent;
+white-space: nowrap;
+padding: 6px 12px;
+font-size: 14px;
+line-height: 1.42857143;
+border-radius: 4px;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+float: right;
+color:#fff;
+margin-right: 50px;
+position: relative;
+top: -30px;
+}
+
+.preorder-btn:hover, .preorder-btn:focus, .preorder-btn:active  {
+outline:none;
+}
+
+/* blue */
+.preorder-btn-blue {
+background-color: #428bca;
+border-color: #357ebd;
+}
+.preorder-btn-blue:hover, .preorder-btn-blue:focus, .preorder-btn-blue:active {
+background-color: #3276b1;
+border-color: #285e8e;
+}
+
+/* green */
+.preorder-btn-green {
+background-color: #5cb85c;
+border-color: #4cae4c;
+}
+.preorder-btn-green:hover, .preorder-btn-green:focus, .preorder-btn-green:active {
+background-color: #47a447;
+border-color: #398439;
+}
+
+/* sky */
+.preorder-btn-sky {
+background-color: #5bc0de;
+border-color: #46b8da;
+}
+.preorder-btn-sky:hover, .preorder-btn-sky:focus, .preorder-btn-sky:active {
+background-color: #39b3d7;
+border-color: #269abc;
+}
+
+/* orange */
+.preorder-btn-orange {
+background-color: #f0ad4e;
+border-color: #eea236;
+}
+.preorder-btn-orange:hover, .preorder-btn-orange:focus, .preorder-btn-orange:active {
+background-color: #ed9c28;
+border-color: #d58512;
+}
+
+/* red */
+.preorder-btn-red {
+background-color: #d9534f;
+border-color: #d43f3a;
+}
+.preorder-btn-red:hover, .preorder-btn-red:focus, .preorder-btn-red:active {
+background-color: #d2322d;
+border-color: #ac2925;
 }

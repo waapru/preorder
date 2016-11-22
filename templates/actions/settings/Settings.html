@@ -47,7 +47,7 @@
 <div class="block block-frontend-design">
 	<h4>
 		<i class="icon16 palette"></i>Дизайн плагина на витрине для темы 
-		<select name="theme" id="select-frontend-disign-theme">
+		<select name="theme" id="select-frontend-design-theme">
 			<option value="_">Для всех тем</option>
 			{foreach $themes as $theme}
 			<option value="{$theme}">{$theme}</option>
@@ -55,10 +55,10 @@
 			<option value="_default_">- исходный файл -</option>
 		</select>
 	</h4>
-	<a href="#" class="inline-link" data-mode="text/css" data-name="css">css-стили</a>
-	<a href="#" class="inline-link" data-mode="text/javascript" data-name="js">js-скрипты</a>
-	<a href="#" class="inline-link" data-mode="text/html" data-name="form">блок "Форма предзаказа"</a>
-	<a href="#" class="inline-link" data-mode="text/html" data-name="head">блок "frontend_head"</a>
+	<a href="#" class="inline-link" data-mode="css" data-name="css">css-стили</a>
+	<a href="#" class="inline-link" data-mode="javascript" data-name="js">js-скрипты</a>
+	<a href="#" class="inline-link" data-mode="html" data-name="form">Форма предзаказа</a>
+	<a href="#" class="inline-link" data-mode="html" data-name="head">head</a>
 	<div id="frontend-disign-dialog" style="display:none;">
 		<textarea style="display:none;"></textarea>
 		{$wa->csrf()}
@@ -83,7 +83,7 @@
 
 <script type="text/javascript">
 $(function(){
-	var wa_url = '{$wa_url}';
-	$.shop.preorderPlugin.init();
+	//var wa_url = '{$wa_url}';
+	$.shop.preorderPlugin.init('{$wa_url}');
 })
 </script>

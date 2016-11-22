@@ -1,9 +1,15 @@
 <?php
 
 return array(
-	'on' => array(
-		'title' => 'Включить предзаказ',
-		'description' => 'Если флажок снят, то предложение о предзаказе выводиться не будет.',
+	'css_on' => array(
+		'title' => 'Включить css',
+		'description' => '',
+		'control_type' => waHtmlControl::CHECKBOX,
+		'value' => 1
+	),
+	'js_on' => array(
+		'title' => 'Включить js',
+		'description' => '',
 		'control_type' => waHtmlControl::CHECKBOX,
 		'value' => 1
 	),
@@ -30,6 +36,28 @@ return array(
 		'description' => 'Фраза на кнопке формы предзаказа',
 		'control_type' => waHtmlControl::INPUT,
 		'value' => 'Сделать предзаказ'
+	),
+	'btncolor' => array(
+		'title' => 'Цвет кнопки',
+		'description' => '',
+		'control_type' => waHtmlControl::SELECT,
+		'value' => 'green',
+		'options' => array(
+			'blue' => 'синий',
+			'green' => 'зеленый',
+			'sky' => 'голубой',
+			'orange' => 'оранжевый',
+			'red' => 'красный')
+	),
+	'modaltheme' => array(
+		'title' => 'Тема модального окна',
+		'description' => '',
+		'control_type' => waHtmlControl::SELECT,
+		'value' => 'green',
+		'options' => array(
+			'simple' => 'светлая',
+			'dark' => 'темная',
+		),
 	),
 	'email_error' => array(
 		'title' => 'Сообщение о некорректном Email',

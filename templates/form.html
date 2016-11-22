@@ -1,7 +1,6 @@
-{if $settings.on}
 <div class="shop-preorder-plugin-form-wr" id="shop-preorder-plugin-form-wr-{$data.product_id}">
 	{foreach $data.skus as $sku_id=>$sku}
-		<a class="preorder-open" href="#" data-sku-id="{$sku_id}" id="shop-preorder-plugin-form-{$sku_id}-btn"{if $product.sku_id != $sku_id} style="display:none"{/if}>{$settings.button}</a>
+		<a class="preorder-open preorder-btn preorder-btn-{$settings.btncolor}" href="#" data-sku-id="{$sku_id}" id="shop-preorder-plugin-form-{$sku_id}-btn"{if $product.sku_id != $sku_id} style="display:none"{/if}>{$settings.button}</a>
 	{/foreach}
 	<script type="text/javascript">
 	$(function(){
@@ -9,9 +8,9 @@
 	})
 	</script>
 	{foreach $data.skus as $sku_id=>$sku}
-	<div id="shop-preorder-plugin-form-{$sku_id}" class="box-modal" style="display:none;">
-		<div class="box-modal_close arcticmodal-close">закрыть</div>
-		<h3>Заказать {$data.product_name}{if !empty($sku.name)} ({$sku.name}){else} ({$sku.sku}){/if}</h3>
+	<div id="shop-preorder-plugin-form-{$sku_id}" class="box-modal modal-theme-{$settings.modaltheme}" style="display:none;">
+		<div class="box-modal_close preordermodal-close">закрыть</div>
+		<h3>Заказать {$data.product_name}{if !empty($sku.name)} ({$sku.name}){elseif !empty($sku.sku)} ({$sku.sku}){/if}</h3>
 		<input type="hidden" name="preorder_product_id" value="{$data.product_id}">
 		<input type="hidden" name="preorder_sku_id" value="{$sku_id}">
 		{$wa->csrf()}
@@ -64,11 +63,9 @@
 		
 		<div class="field">
 			<div class="value">
-				<a class="preorder-submit" href="{$data.url}preorder/">Заказать</a>
+				<a class="preorder-submit preorder-btn preorder-btn-{$settings.btncolor}" href="{$data.url}preorder/">Заказать</a>
 			</div>
 		</div>
 	</div>
 	{/foreach}
 </div>
-
-{/if}

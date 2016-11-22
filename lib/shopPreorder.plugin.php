@@ -8,9 +8,10 @@ class shopPreorderPlugin extends shopPlugin
 	const NO_PHONE_ERROR = 4;
 	const PHONE_EMAIL_ERROR = 5;
 
+	/* заглушка для старых версий */
 	static public function on()
 	{
-		return wa('shop')->getPlugin('preorder')->getSettings('on');
+		return false;
 	}
 	
 	
@@ -20,8 +21,7 @@ class shopPreorderPlugin extends shopPlugin
 		$plugin = wa('shop')->getPlugin('preorder');
 		$settings = $plugin->getSettings();
 		
-		$category_params_model = new shopCategoryParamsModel;
-		$params = $category_params_model->get($product['category_id']);
+		$params = self::m('cp')->get($product['category_id']);
 		$category_preorder = 1;
 		if ( isset($params['preorder']) )
 		{
@@ -30,7 +30,7 @@ class shopPreorderPlugin extends shopPlugin
 				$category_preorder = 0;
 		}
 		
-		if ( $settings['on'] && $category_preorder )
+		if ( $category_preorder )
 		{
 			$data = array(
 				'product_id' => $product['id'],
@@ -42,23 +42,14 @@ class shopPreorderPlugin extends shopPlugin
 			);
 			$data['user_name'] = ( $data['is_auth'] ) ? wa()->getUser()->getName() : '';
 			
-			$feature_model = new shopFeatureModel;
-			$preorder_feature_exists = ( $feature_model->countByField('code','preorder') ) ? true : false;
-			
-			if ( $preorder_feature_exists )
-			{
-				$product_features_model = new shopProductFeaturesModel;
-				$feature_values_varchar_model = new shopFeatureValuesVarcharModel;
-			}
-			
-			$model = new shopProductSkusModel;
-			$skus = $model->getByField('product_id',$product['id'],true);
+			$preorder_feature_exists = ( self::m('f')->countByField('code','preorder') ) ? true : false;
+			$skus = self::m('ps')->getByField('product_id',$product['id'],true);
 			foreach ( $skus as $sku )
 			{
 				$on = 1;
 				if ( $preorder_feature_exists )
-					if ( $row = $product_features_model->getByField('sku_id', $sku['id']) )
-						if ( $row = $feature_values_varchar_model->getById($row['feature_value_id']) )
+					if ( $row = self::m('pf')->getByField('sku_id', $sku['id']) )
+						if ( $row = self::m('fvv')->getById($row['feature_value_id']) )
 							$on = $row['value'];
 				$data['product_ids'][$sku['id']] = $product['id'];
 				if ( $on && isset($sku['count']) && $sku['count'] <= 0 && $sku['available'] )
@@ -66,12 +57,9 @@ class shopPreorderPlugin extends shopPlugin
 			}
 			
 			$view = wa()->getView();
-			$view->assign('data',$data);
-			$view->assign('product',$product);
-			$view->assign('settings',$settings);
+			$view->assign(compact('data','settings'));
 			
-			$f = new shopPreorderPluginFiles;
-			$html = $view->fetch('string:'.$f->getFileContent('form'));
+			$html = $view->fetch('string:'.self::f()->getFileContent('form'));
 		}
 		return $html;
 	}
@@ -79,52 +67,30 @@ class shopPreorderPlugin extends shopPlugin
 	
 	public function frontendProduct($product)
 	{
-		$html = '';
-		
-		$settings = $this->getSettings();
-		if ( $settings['on'] && $settings['hook'] )
-			$html = self::form($product);
-		
-		return array('cart'=>$html);
+		return array(
+			'cart' => $this->getSettings('hook') ? self::form($product) : ''
+		);
 	}
 	
 	
 	public function frontendHead()
 	{
-		$html = '';
 		$settings = $this->getSettings();
-		if ( $settings['on'] )
-		{
-			$response = waSystem::getInstance()->getResponse();
-			
-			$aurl = 'plugins/preorder/js/arcticmodal/';
-			$response->addCss($aurl.'jquery.arcticmodal-0.3.css','shop');
-			$response->addCss($aurl.'themes/simple.css','shop');
-			$response->addJs($aurl.'jquery.arcticmodal-0.3.min.js','shop');
-			$response->addJs('plugins/preorder/js/jquery.inputmask.js','shop');
-			
-			$f = new shopPreorderPluginFiles;
-			$f->addCss('css');
-			$f->addJs('js');
-			
-			$view = wa()->getView();
-			$view->assign('settings',$settings);
-			$html = $view->fetch('string:'.$f->getFileContent('head'));
-		}
-		return $html;
+		if ( $settings['css_on'] )
+			self::f()->addCss('css');
+		if ( $settings['js_on'] )
+			self::f()->addJs('js');
+		$view = wa()->getView();
+		$view->assign('settings',$settings);
+		return $view->fetch('string:'.self::f()->getFileContent('head'));
 	}
 	
 	
 	public function orderActionDelete()
 	{
 		$order_id = waRequest::post('id',0,waRequest::TYPE_INT);
-		$log_model = new shopOrderLogModel;
-		$state = $log_model->getPreviousState($order_id);
-		if ( $state == 'preorder' )
-		{
-			$order_model = new shopOrderModel;
-			$order_model->reduceProductsFromStocks($order_id);
-		}
+		if ( self::m('ol')->getPreviousState($order_id) == 'preorder' )
+			self::m('o')->reduceProductsFromStocks($order_id);
 	}
 	
 	
@@ -141,39 +107,29 @@ class shopPreorderPlugin extends shopPlugin
 	}
 	
 	
-	public function getSettingsHTML($params = array())
+	static protected function f()
 	{
-		$controls = array();
-		$default = array(
-			'instance'            => & $this,
-			'title_wrapper'       => '%s',
-			'description_wrapper' => '<br><span class="hint">%s</span>',
-			'translate'           => array(&$this, '_w'),
-			'control_wrapper'     => '
-<div class="field">
-	<div class="name">%s</div>
-	<div class="value">%s%s</div>
-</div>
-',
+		static $f;
+		return isset($f) ? $f : new shopPreorderPluginFiles;
+	}
+	
+	
+	static protected function m($m = 'c')
+	{
+		static $models;
+		$model_names = array(
+			'cp' => 'shopCategoryParamsModel',
+			'f' => 'shopFeatureModel',
+			'pf' => 'shopProductFeaturesModel',
+			'ol' => 'shopOrderLogModel',
+			'ps' => 'shopProductSkusModel',
+			'fvv' => 'shopFeatureValuesVarcharModel',
+			'o' => 'shopOrderModel',
 		);
-		$options = ifempty($params['options'], array());
-		unset($params['options']);
-		$params = array_merge($default, $params);
-
-		foreach ($this->getSettingsConfig() as $name => $row) {
-			$row = array_merge($row, $params);
-			$row['value'] = $this->getSettings($name);
-			if (isset($options[$name])) {
-				$row['options'] = $options[$name];
-			}
-			if (isset($params['value']) && isset($params['value'][$name])) {
-				$row['value'] = $params['value'][$name];
-			}
-			if (!empty($row['control_type'])) {
-				$controls[$name] = waHtmlControl::getControl($row['control_type'], "shop_preorder[$name]", $row);
-			}
-		}
-		return implode("\n", $controls);
+		$m = isset($model_names[$m]) ? $m : 'c';
+		if ( !isset($models[$m]) )
+			$models[$m] = new $model_names[$m];
+		return $models[$m];
 	}
 
 }
