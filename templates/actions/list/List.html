@@ -2,7 +2,7 @@
 	<div class="block double-padded">
 		<h1>Предзаказанные товары</h1>
 		{if $list}
-		<table class="zebra" id="shop-fav-plugin-table">
+		<table class="zebra" id="shop-preorder-plugin-table">
 			<thead>
 				<tr>
 					<th>
@@ -14,23 +14,27 @@
 					<th class="short align-right">
 						<a href="#" class="inline-link">Количество</a>
 					</th>
+					<th class="short align-right">
+						<a href="#" class="inline-link">На складе</a>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{foreach $list as $sku_id=>$p}
-				<tr>
+				<tr class="preorder-list-{if $p.count > $p.product.skus[$sku_id].count}red{/if}">
 					<td>
-						<a href="?action=products#/product/{$p.product_id}/edit/">{$p.name}</a>
+						<a href="?action=products#/product/{$p.product.id}/edit/">{$p.product.name}</a>
 					</td>
 					<td>
-						{$p.sku_code|default:"#`$sku_id`"}
+						{$p.product.skus[$sku_id].name|default:$p.product.skus[$sku_id].name|default:"#`$sku_id`"}
 					</td>
 					<td class="short nowrap align-right">{$p.count}</td>
+					<td class="short nowrap align-right">{$p.product.skus[$sku_id].count}</td>
 				</tr>
 				{/foreach}
 			</tbody>
 		</table>
-		<p>{$current} товара(ов) из {$count}{if $current < $count}<br><a href="#" class="inline-link" id="s-fav-load-list" data-count="{$count}" data-offset="{$offset}">показать еще...</a>{/if}</p>
+		<p>{$current} товара(ов) из {$count}{if $current < $count}<br><a href="#" class="inline-link" id="s-preorder-load-list" data-count="{$count}" data-offset="{$offset}">показать еще...</a>{/if}</p>
 		{else}
 		<p>Список пуст</p>
 		{/if}
@@ -38,12 +42,15 @@
 </div>
 
 <style>
-#shop-fav-plugin-table thead a {
+#shop-preorder-plugin-table thead a {
 padding: 2px;
 }
-#shop-fav-plugin-table + p {
+#shop-preorder-plugin-table + p {
 text-align: center;
 padding: 10px;
+}
+.preorder-list-red td:first-child a {
+color:red!important;
 }
 </style>
 

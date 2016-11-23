@@ -12,9 +12,10 @@
 		var self = $(this),
 			d = $('<div />').load('?plugin=preorder&module=list&offset='+$(this).data('offset'),function(){
 				console.log('tr=',$('#shop-preorder-plugin-table tr',d));
-				$('#shop-preorder-plugin-table tr:last').after($('#shop-preorder-plugin-table tr td',d).closest('tr'));
+				$('#shop-preorder-plugin-table tr:last').after($('#shop-preorder-plugin-table tbody tr',d));
 				$('#shop-preorder-plugin-table + p').replaceWith($('#shop-preorder-plugin-table + p',d));
 			});
+			$('#s-preorder-load-list .loading').remove();
 		return false;
 	})
 })(jQuery);
